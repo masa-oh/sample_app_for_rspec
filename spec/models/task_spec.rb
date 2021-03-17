@@ -21,14 +21,14 @@ RSpec.describe Task, type: :model do
     end
 
     it '重複したタイトルでは無効であること' do
-      task = FactoryBot.create(:task, title: 'テスト')
-      task_with_duplicated_title = FactoryBot.build(:task, title: 'テスト')
+      task = FactoryBot.create(:task)
+      task_with_duplicated_title = FactoryBot.build(:task, title: task.title)
       task_with_duplicated_title.valid?
       expect(task_with_duplicated_title.errors[:title]).to include('has already been taken')
     end
 
     it '別のタイトルで有効なタスクが作成できること' do
-      task = FactoryBot.create(:task, title: 'Test')
+      task = FactoryBot.create(:task)
       task_with_another_title = FactoryBot.build(:task, title: 'Another Test')
       expect(task_with_another_title).to be_valid
       expect(task_with_another_title.errors).to be_empty
