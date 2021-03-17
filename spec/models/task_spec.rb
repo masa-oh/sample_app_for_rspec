@@ -9,29 +9,29 @@ RSpec.describe Task, type: :model do
     end
 
     it 'タイトル無しでは無効であること' do
-      task = FactoryBot.build(:task, title: nil)
-      task.valid?
-      expect(task.errors[:title]).to include("can't be blank")
+      task_without_title = FactoryBot.build(:task, title: "")
+      task_without_title.valid?
+      expect(task_without_title.errors[:title]).to include("can't be blank")
     end
 
     it 'ステータス無しでは無効であること' do
-      task = FactoryBot.build(:task, status: nil)
-      task.valid?
-      expect(task.errors[:status]).to include("can't be blank")
+      task_without_status = FactoryBot.build(:task, status: nil)
+      task_without_status.valid?
+      expect(task_without_status.errors[:status]).to include("can't be blank")
     end
 
     it '重複したタイトルでは無効であること' do
-      FactoryBot.create(:task, title: 'テスト')
-      task = FactoryBot.build(:task, title: 'テスト')
-      task.valid?
-      expect(task.errors[:title]).to include('has already been taken')
+      task = FactoryBot.create(:task, title: 'テスト')
+      task_with_duplicated_title = FactoryBot.build(:task, title: 'テスト')
+      task_with_duplicated_title.valid?
+      expect(task_with_duplicated_title.errors[:title]).to include('has already been taken')
     end
 
     it '別のタイトルで有効なタスクが作成できること' do
-      FactoryBot.create(:task, title: 'Test')
-      task = FactoryBot.build(:task, title: 'Another Test')
-      expect(task).to be_valid
-      expect(task.errors).to be_empty
+      task = FactoryBot.create(:task, title: 'Test')
+      task_with_another_title = FactoryBot.build(:task, title: 'Another Test')
+      expect(task_with_another_title).to be_valid
+      expect(task_with_another_title.errors).to be_empty
     end
   end
 end
