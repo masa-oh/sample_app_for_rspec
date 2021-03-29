@@ -6,28 +6,34 @@ RSpec.describe "UserSessions", type: :system do
   describe 'ログイン前' do
     context 'フォームの入力値が正常' do
       it 'ログイン処理が成功する' do
-        login(user)
+        visit login_path
+        fill_in 'email', with: user.email
+        fill_in 'password', with: 'password'
+        click_button 'Login'
         expect(page).to have_content 'Login successful'
+        expect(current_path).to eq root_path
       end
     end
     
     context 'フォームが未入力' do
       it 'ログイン処理が失敗する' do
-        login(user, email: '', password: '') 
+        visit login_path
+        fill_in 'email', with: ''
+        fill_in 'password', with: 'password'
+        click_button 'Login'
         expect(page).to have_content 'Login failed'
+        expect(current_path).to eq login_path
       end
     end
   end
 
   describe 'ログイン後' do
-    before do
-      login(user)
-    end
-
     context 'ログアウトボタンをクリック' do
       it 'ログアウト処理が成功する' do
-        logout
+        login_as(user)
+        click_link 'Logout'
         expect(page).to have_content 'Logged out'
+        expect(current_path).to eq root_path
       end
     end
   end

@@ -15,6 +15,7 @@ RSpec.describe "Tasks", type: :system do
           visit new_task_path
           expect(page).to have_current_path '/login'
           expect(page).to have_content 'Login required'
+          expect(current_path).to eq login_path
         end
       end
     end
@@ -23,8 +24,8 @@ RSpec.describe "Tasks", type: :system do
       context 'ログインしていない状態' do
         it 'タスク編集ページへのアクセスが失敗する' do
           visit edit_task_path(registered_task)
-          expect(page).to have_current_path '/login'
           expect(page).to have_content 'Login required'
+          expect(current_path).to eq login_path
         end
       end
     end
@@ -42,6 +43,7 @@ RSpec.describe "Tasks", type: :system do
           fill_in 'task[deadline]', with: 1.week.from_now
           click_button 'Create Task'
           expect(page).to have_content 'Task was successfully created.'
+          expect(current_path).to eq '/tasks/1'
         end
       end
     end
@@ -54,6 +56,7 @@ RSpec.describe "Tasks", type: :system do
           fill_in 'task[title]', with: task_with_another_title.title
           click_button 'Update Task'
           expect(page).to have_content 'Task was successfully updated.'
+          expect(current_path).to eq task_path(task)
         end
       end
 
@@ -62,6 +65,7 @@ RSpec.describe "Tasks", type: :system do
           login(user)
           visit edit_task_path(task_created_by_another_user)
           expect(page).to have_content 'Forbidden access.'
+          expect(current_path).to eq task_path(task)
         end
       end
     end
@@ -77,6 +81,7 @@ RSpec.describe "Tasks", type: :system do
             click_on 'Destroy', match: :first
           end
           expect(page).to have_content 'Task was successfully destroyed.'
+          expect(current_path).to eq tasks_path
         end
       end
     end
